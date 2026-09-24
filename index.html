@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Embreo &middot; Email preview gallery</title>
+  <style>
+    :root {
+      --ink: #0d1b2a;
+      --ink-soft: #29465e;
+      --muted: #668096;
+      --teal: #00a79d;
+      --teal-deep: #008f87;
+      --teal-pale: #eefaf9;
+      --page: #eef2f6;
+      --line: #dbe4eb;
+      --white: #ffffff;
+      --shadow: 0 22px 50px rgba(13, 27, 42, .10);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(0, 167, 157, .11), transparent 31rem),
+        var(--page);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+
+    .studio {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+    .rail {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 28px 22px 32px;
+      color: #d9e9f3;
+      background: #091622;
+      border-right: 1px solid #1e3547;
+    }
+    .rail-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
+    .rail-mark { color: var(--teal); font-size: 27px; line-height: 1; }
+    .rail-wordmark { color: #fff; font-size: 21px; font-weight: 800; letter-spacing: -.05em; }
+    .rail-kicker { margin: 0 0 7px; color: #70b5d7; font-size: 10px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
+    .rail h1 { margin: 0; color: #fff; font-size: 24px; line-height: 1.08; letter-spacing: -.045em; }
+    .rail-copy { margin: 13px 0 24px; color: #8fa8b9; font-size: 12px; line-height: 1.65; }
+    .rail-count { display: inline-flex; margin-bottom: 18px; padding: 6px 9px; color: #9cece7; background: rgba(0, 167, 157, .13); border: 1px solid rgba(0, 167, 157, .35); border-radius: 999px; font-size: 11px; font-weight: 700; }
+    .search { width: 100%; margin-bottom: 20px; padding: 10px 11px; color: #fff; background: #102536; border: 1px solid #294559; border-radius: 10px; outline: none; font-size: 12px; }
+    .search::placeholder { color: #7893a7; }
+    .search:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0, 167, 157, .15); }
+    .nav-group { margin: 0 0 22px; }
+    .nav-group-title { margin: 0 0 7px 4px; color: #668ca6; font-size: 9px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+    .nav-list { display: grid; gap: 3px; }
+    .nav-item { display: grid; grid-template-columns: 25px minmax(0, 1fr); gap: 8px; align-items: start; padding: 8px 9px; color: #a9c1cf; background: transparent; border: 1px solid transparent; border-radius: 9px; text-align: left; font-size: 11px; line-height: 1.35; }
+    .nav-item:hover, .nav-item.active { color: #fff; background: #102536; border-color: #2b5269; }
+    .nav-num { color: var(--teal); font-variant-numeric: tabular-nums; }
+
+    .workspace { min-width: 0; padding: 54px clamp(20px, 5vw, 76px) 90px; }
+    .workspace-header { display: flex; justify-content: space-between; align-items: end; gap: 24px; max-width: 1050px; margin: 0 auto 36px; }
+    .eyebrow { margin: 0 0 10px; color: var(--teal-deep); font-size: 10px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
+    .workspace h2 { max-width: 680px; margin: 0; color: var(--ink); font-size: clamp(32px, 4vw, 56px); line-height: .98; letter-spacing: -.07em; }
+    .workspace-intro { max-width: 470px; margin: 18px 0 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .source-chip { flex: 0 0 auto; padding: 10px 13px; color: var(--ink-soft); background: rgba(255,255,255,.7); border: 1px solid var(--line); border-radius: 999px; font-size: 11px; font-weight: 700; }
+
+    .email-list { display: grid; gap: 34px; max-width: 1050px; margin: 0 auto; }
+    .preview-section { scroll-margin-top: 26px; }
+    .preview-meta { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin: 0 0 12px; }
+    .preview-title { margin: 0; color: var(--ink); font-size: 18px; line-height: 1.2; letter-spacing: -.035em; }
+    .preview-index { color: #8aa0ae; font-size: 11px; font-weight: 800; letter-spacing: .08em; }
+    .meta-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .meta-pill { padding: 4px 8px; color: #5d7486; background: rgba(255,255,255,.64); border: 1px solid var(--line); border-radius: 999px; font-size: 10px; }
+    .meta-pill strong { color: var(--ink-soft); font-weight: 700; }
+    .source-line { margin: 8px 0 0; color: #91a1ad; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9px; }
+
+    .email-stage { padding: clamp(14px, 3vw, 30px); background: #e6ebf0; border: 1px solid #d4dee6; border-radius: 16px; box-shadow: 0 10px 20px rgba(13, 27, 42, .04) inset; }
+    .email-shell { max-width: 640px; margin: 0 auto; }
+    .email-head { padding: 24px 28px; background: var(--ink); border-radius: 20px 20px 0 0; }
+    .brand { display: inline-flex; align-items: center; color: #fff; }
+    .brand img { display: block; width: 128px; max-width: 100%; height: auto; }
+    .email-card { padding: 34px 32px; background: var(--white); border: 1px solid var(--line); border-top: 0; border-radius: 0 0 20px 20px; box-shadow: var(--shadow); }
+    .email-card .email-eyebrow { margin: 0 0 10px; color: var(--teal); font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    .email-card h3 { margin: 0 0 12px; color: var(--ink); font-size: 29px; line-height: 1.1; letter-spacing: -.055em; }
+    .email-card .lead { margin: 0 0 26px; color: var(--muted); font-size: 15px; line-height: 1.55; font-style: italic; }
+    .email-card p { margin: 0 0 20px; color: var(--ink); font-size: 15px; line-height: 1.6; }
+    .email-card .muted { color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .details { width: 100%; margin: 22px 0 24px; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: #f8fafc; border-collapse: separate; }
+    .details th { padding: 14px 16px 9px; color: var(--muted); border-bottom: 1px solid var(--line); font-size: 10px; letter-spacing: .14em; text-align: left; text-transform: uppercase; }
+    .details td { padding: 12px 16px; border-bottom: 1px solid #eef1f6; color: var(--ink); font-size: 13px; line-height: 1.45; vertical-align: top; }
+    .details tr:last-child td { border-bottom: 0; }
+    .details td:first-child { width: 34%; color: var(--muted); font-size: 11px; font-weight: 700; }
+    .email-card ul { margin: 0 0 20px 20px; padding: 0; color: var(--ink); font-size: 14px; line-height: 1.6; }
+    .email-card li { margin: 0 0 6px; }
+    .cta-wrap { margin: 28px 0 26px; }
+    .cta { display: inline-block; padding: 14px 22px; color: #fff; background: var(--teal); border-radius: 12px; font-size: 14px; font-weight: 800; text-decoration: none; }
+    .cta:hover { background: var(--teal-deep); }
+    .fallback { margin: 0 0 11px !important; color: var(--muted) !important; font-size: 13px !important; }
+    .fallback-link { display: block; margin: 0 0 20px; overflow-wrap: anywhere; color: #2563eb; font-size: 14px; line-height: 1.55; text-decoration: underline; }
+    .attachment { margin: 22px 0 24px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: #f8fafc; }
+    .attachment-label { margin: 0 0 4px !important; color: var(--teal) !important; font-size: 10px !important; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .attachment-name { margin: 0 0 3px !important; font-size: 14px !important; font-weight: 800; }
+    .attachment-copy { margin: 0 !important; color: var(--muted) !important; font-size: 12px !important; }
+    .signoff { margin: 28px 0 0; padding-top: 20px; border-top: 1px solid var(--line); }
+    .signoff p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
+    .signoff strong { color: var(--teal); }
+    .email-footer { padding: 16px 24px 0; color: #4d6478; text-align: center; font-size: 12px; line-height: 1.45; }
+    .email-footer p { margin: 0 0 8px; }
+    .email-footer .small { margin-bottom: 6px; font-size: 11px; }
+    .email-footer strong { color: var(--ink); }
+    .email-footer a { color: #28556e; text-decoration: none; }
+    .email-footer .teal { color: var(--teal); }
+    .email-footer .copyright { margin: 0; color: #4d6478; font-size: 11px; }
+    .empty { display: none; padding: 30px; color: var(--muted); background: #fff; border: 1px solid var(--line); border-radius: 16px; text-align: center; }
+
+    @media (max-width: 900px) {
+      .studio { display: block; }
+      .rail { position: static; height: auto; padding: 22px 18px 18px; }
+      .rail-copy { max-width: 560px; }
+      .nav-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .workspace { padding: 38px 18px 64px; }
+      .workspace-header { display: block; }
+      .source-chip { display: inline-flex; margin-top: 20px; }
+    }
+    @media (max-width: 560px) {
+      .nav-list { grid-template-columns: 1fr; }
+      .email-head { padding: 22px 20px; }
+      .email-card { padding: 28px 20px; }
+      .email-card h3 { font-size: 26px; }
+      .email-footer { padding-left: 8px; padding-right: 8px; }
+      .preview-meta { display: block; }
+      .preview-index { display: block; margin-bottom: 5px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="studio">
+    <aside class="rail">
+      <div class="rail-brand"><span class="rail-mark">&#9679;</span><span class="rail-wordmark">embreo</span></div>
+      <p class="rail-kicker">Email preview studio</p>
+      <h1>Every message,<br>one premium system.</h1>
+      <p class="rail-copy">A visual inventory of the backend&rsquo;s shared email shell, including client notices, internal operations mail, billing states, and reporting.</p>
+      <div class="rail-count" id="countBadge">22 variants</div>
+      <input class="search" id="search" type="search" placeholder="Filter by email, trigger, or subject&hellip;" aria-label="Filter email previews">
+      <nav id="nav"></nav>
+    </aside>
+
+    <main class="workspace">
+      <header class="workspace-header">
+        <div>
+          <p class="eyebrow">Backend email gallery &middot; 24 Sep 2026</p>
+          <h2>One clear view of every email your team sends.</h2>
+          <p class="workspace-intro">Each preview follows the production shell: dark navy header, white rounded message card, teal action, readable details, compact signature, and the Embreo footer.</p>
+        </div>
+        <div class="source-chip">Standalone preview &middot; no backend changes</div>
+      </header>
+      <div class="email-list" id="emailList"></div>
+      <div class="empty" id="empty">No email matches that filter.</div>
+    </main>
+  </div>
+
+  <script>
+    const DATA = [
+      {
+        group: 'Requests & scheduling', name: 'Pilot request received', trigger: 'Pilot form submitted', recipient: 'Prospective client', subject: 'Your pilot request is received', source: 'potentialcustomer/service/notifier.go',
+        eyebrow: 'Pilot request', title: 'Your request is in review', lead: 'Thanks for sharing the context. We&rsquo;ll be in touch with the next step.',
+        body: () => p('Hi Maya,') + p('Thanks for submitting your pilot request to Embreo.') + details('What we received', [['Company', 'Northstar Foods'], ['Goal', 'Build a predictable pipeline'], ['Budget', 'SGD 5,000&ndash;10,000 / month']]) + p('Our team is reviewing your details and will follow up with next steps shortly.')
+      },
+      {
+        group: 'Requests & scheduling', name: 'Internal new pilot request', trigger: 'Pilot form submitted', recipient: 'Tech inbox', subject: 'New Pilot Request: Northstar Foods', source: 'potentialcustomer/service/notifier.go',
+        eyebrow: 'Operations', title: 'New pilot request', lead: 'A potential customer has submitted a request for review.',
+        body: () => p('A new potential customer submitted a pilot request.') + details('Request details', [['Name', 'Maya Tan'], ['Email', 'maya@northstarfoods.co'], ['Company', 'Northstar Foods'], ['Website / social', 'northstarfoods.co'], ['Country', 'Singapore'], ['What they sell', 'Premium prepared foods'], ['Growth problem', 'Inconsistent qualified demand'], ['Primary goal', 'Build a predictable pipeline'], ['Monthly budget', 'SGD 5,000&ndash;10,000'], ['Request ID', 'pilot_7FJ2NQ']])
+      },
+      {
+        group: 'Requests & scheduling', name: 'Consultation request received', trigger: 'Consultation time requested', recipient: 'Client', subject: 'Consultation session request received', source: 'marketaudit/service/consultation_notifier.go',
+        eyebrow: 'Consultation', title: 'We received your request', lead: 'Your preferred session time is with our team for review.',
+        body: () => p('Hi Maya,') + p('We received your consultation request for Thu, 24 Sep 2026 12:11 PM (Asia/Jakarta).') + p('Our team will contact you shortly to confirm the final session details.')
+      },
+      {
+        group: 'Requests & scheduling', name: 'Internal new consultation request', trigger: 'Consultation time requested', recipient: 'Tech inbox', subject: 'New consultation room request', source: 'marketaudit/service/consultation_notifier.go',
+        eyebrow: 'Operations', title: 'New consultation request', lead: 'Create the meeting room and review the request details below.',
+        body: () => p('Please create the meeting room and review the consultation request.') + details('Request details', [['Client', 'Maya Tan'], ['Email', 'maya@northstarfoods.co'], ['Business', 'Northstar Foods'], ['Requested time', 'Thu, 24 Sep 2026 12:11 PM (Asia/Jakarta)'], ['Audit ID', 'audit_7FJ2NQ']])
+      },
+      {
+        group: 'Requests & scheduling', name: 'Consultation approved', trigger: 'Admin approves consultation', recipient: 'Client', subject: 'Your consultation request was approved', source: 'marketaudit/service/consultation_notifier.go',
+        eyebrow: 'Consultation', title: 'Your consultation is approved', lead: 'Your session is confirmed and a calendar invite is attached.',
+        body: () => p('Hi Maya,') + p('Your consultation request has been approved for Thu, 24 Sep 2026 12:11 PM (Asia/Jakarta).') + details('Session details', [['Provider', 'Google Meet'], ['Duration', '45 minutes'], ['Meeting link', 'https://meet.google.com/abc-defg-hij']]) + attachment('consultation-session.ics', 'Calendar invite attached &mdash; add this confirmed session to your calendar.') + p('Please keep the calendar invite for your records.')
+      },
+      {
+        group: 'Requests & scheduling', name: 'Consultation declined / reschedule', trigger: 'Admin declines consultation', recipient: 'Client', subject: 'Your consultation request was declined', source: 'marketaudit/service/consultation_notifier.go',
+        eyebrow: 'Consultation', title: 'Choose a new consultation time', lead: 'The requested time is no longer available.',
+        body: () => p('Hi Maya,') + p('Your consultation request for Thu, 24 Sep 2026 12:11 PM (Asia/Jakarta) has been declined.') + p('Please book another time that works better for you.') + p('Suggested options:') + list(['Option 1: Fri, 25 Sep 2026 12:11 PM (Asia/Jakarta)', 'Option 2: Sat, 26 Sep 2026 12:11 PM (Asia/Jakarta)']) + button('Book another time', 'https://cmo.embreo.global/intake/schedule?audit_id=audit_7FJ2NQ', true)
+      },
+      {
+        group: 'Requests & scheduling', name: 'Meeting accepted / confirmed', trigger: 'Meeting request accepted', recipient: 'Client', subject: 'Your meeting request was accepted', source: 'event/service/meeting_notifier.go',
+        eyebrow: 'Meeting update', title: 'Your meeting is confirmed', lead: 'Your request has been accepted and the details are ready.',
+        body: () => p('Hi Maya,') + p('Your meeting request for Northstar Foods has been accepted for Thu, 24 Sep 2026 12:11 PM (Asia/Jakarta).') + details('Meeting details', [['Provider', 'Google Meet'], ['Time', 'Thu, 24 Sep 2026 12:11 PM'], ['Timezone', 'Asia/Jakarta']]) + button('Join meeting', 'https://meet.google.com/bjyv-gpz', true)
+      },
+      {
+        group: 'Requests & scheduling', name: 'Meeting declined / reschedule', trigger: 'Meeting request declined', recipient: 'Client', subject: 'Your meeting request was declined', source: 'event/service/meeting_notifier.go',
+        eyebrow: 'Meeting update', title: 'Choose a new meeting time', lead: 'The requested time is no longer available.',
+        body: () => p('Hi Maya,') + p('Your meeting request for Thu, 24 Sep 2026 12:11 PM (Asia/Jakarta) was declined.') + p('Please choose another time that works for you.') + button('Schedule a new time', 'https://cmo.embreo.global/intake/schedule', true)
+      },
+      {
+        group: 'Account access', name: 'Client portal access credentials', trigger: 'Client account created', recipient: 'New client', subject: 'Your client portal access', source: 'marketaudit/service/client_account_notifier.go',
+        eyebrow: 'Workspace access', title: 'Your client portal is ready', lead: 'Sign in to review your marketing workspace and next steps.',
+        body: () => p('Hi Maya,') + p('Your Embreo client portal is ready. Use the temporary credentials below to sign in, then update your password.') + details('Sign-in details', [['Email', 'maya@northstarfoods.co'], ['Temporary password', 'Northstar!2026'], ['Portal', 'cmo.embreo.global']]) + button('Open client portal', 'https://cmo.embreo.global/login', true) + p('For your security, please change your temporary password after signing in.')
+      },
+      {
+        group: 'Account access', name: 'Password reset', trigger: 'Password reset requested', recipient: 'Account holder', subject: 'Reset your password', source: 'auth/password_reset_notifier.go',
+        eyebrow: 'Account security', title: 'Reset your password', lead: 'Use the secure link below to choose a new password.',
+        body: () => p('Hi Maya,') + p('We received a request to reset your password.') + button('Reset password', 'https://cmo.embreo.global/reset-password?token=sample', true) + p('If you didn&rsquo;t request this, you can ignore this email.')
+      },
+      {
+        group: 'Billing & payment', name: 'Subscription selection link', trigger: 'Admin sends selected plan', recipient: 'Client', subject: 'Your subscription link is ready', source: 'marketaudit/service/billing_selection_notifier.go',
+        eyebrow: 'Next step', title: 'Your subscription plan is ready', lead: 'Review the selected plan and continue securely when you&rsquo;re ready.',
+        body: () => p('Hi Maya,') + p('Thanks for meeting with our team. Your selected subscription plan is ready.') + details('Selected plan', [['Plan', 'Marketing Executive'], ['Monthly price', 'SGD 500'], ['Billing', 'Monthly'], ['Payment', 'Secure Stripe checkout']]) + button('Review your plan', 'https://cmo.embreo.global/checkout?token=sample', true)
+      },
+      {
+        group: 'Billing & payment', name: 'Performance fee terms confirmed', trigger: 'Admin confirms fee terms', recipient: 'Client', subject: 'Your performance fee terms have been confirmed', source: 'payment/service/notifier.go',
+        eyebrow: 'Billing', title: 'Your terms are confirmed', lead: 'Your performance fee terms are now saved to your subscription.',
+        body: () => p('Hi Maya,') + p('The performance fee terms for Northstar Foods have been confirmed and saved.') + details('Confirmed terms', [['Plan', 'Marketing Executive'], ['Performance fee', 'SGD 75 per qualified lead'], ['Minimum', 'SGD 500 / month'], ['Status', 'Active']]) + p('These terms will be used for future performance-fee invoices.')
+      },
+      {
+        group: 'Billing & payment', name: 'Invoice ready', trigger: 'Subscription charge issued', recipient: 'Client', subject: 'Your bill is ready', source: 'payment/service/notifier.go',
+        eyebrow: 'Billing', title: 'Your invoice is ready', lead: 'Review the latest subscription charge in your account.',
+        body: () => p('Hi Maya,') + p('Your latest subscription charge is ready for review.') + details('Invoice details', [['Plan', 'Marketing Executive'], ['Invoice number', 'INV-2026-0048'], ['Amount due', 'SGD 575.00'], ['Due date', '30 Sep 2026'], ['Status', 'Payment pending']]) + button('Review invoice', 'https://cmo.embreo.global/billing/invoices/INV-2026-0048', true)
+      },
+      {
+        group: 'Billing & payment', name: 'Manual payment confirmed', trigger: 'Admin records manual payment', recipient: 'Client', subject: 'Your manual payment has been confirmed', source: 'payment/service/notifier.go',
+        eyebrow: 'Payment', title: 'Payment confirmed', lead: 'Your manual payment has been recorded successfully.',
+        body: () => p('Hi Maya,') + p('Your payment has been recorded successfully. Thank you for keeping your subscription up to date.') + details('Payment details', [['Plan', 'Marketing Executive'], ['Amount paid', 'SGD 575.00'], ['Payment date', '24 Sep 2026'], ['Method', 'Manual bank transfer'], ['Status', 'Paid']])
+      },
+      {
+        group: 'Billing & payment', name: 'Automatic renewal payment successful', trigger: 'Stripe renewal succeeds', recipient: 'Client', subject: 'Your automatic renewal payment was successful', source: 'payment/service/notifier.go',
+        eyebrow: 'Payment', title: 'Renewal payment successful', lead: 'Your subscription remains active.',
+        body: () => p('Hi Maya,') + p('Your automatic renewal payment was successful and your subscription remains active.') + details('Renewal details', [['Plan', 'Marketing Executive'], ['Amount paid', 'SGD 575.00'], ['Renewed on', '24 Sep 2026'], ['Next renewal', '24 Oct 2026'], ['Status', 'Active']])
+      },
+      {
+        group: 'Billing & payment', name: 'Upcoming renewal reminder', trigger: 'Renewal date approaching', recipient: 'Client', subject: 'Your subscription renewal is coming up', source: 'payment/service/notifier.go',
+        eyebrow: 'Billing', title: 'Your renewal is coming up', lead: 'Review your payment details before the next billing date.',
+        body: () => p('Hi Maya,') + p('Your subscription is scheduled to renew soon. Please review your payment details before the next billing date.') + details('Upcoming renewal', [['Plan', 'Marketing Executive'], ['Renewal date', '24 Oct 2026'], ['Expected amount', 'SGD 575.00'], ['Payment method', 'Visa ending in 4242']]) + button('Review payment details', 'https://cmo.embreo.global/billing', true)
+      },
+      {
+        group: 'Billing & payment', name: 'Manual payment reminder', trigger: 'Manual payment due soon', recipient: 'Client', subject: 'Manual payment reminder', source: 'payment/service/notifier.go',
+        eyebrow: 'Payment reminder', title: 'Payment is due soon', lead: 'Complete the renewal to keep your access active.',
+        body: () => p('Hi Maya,') + p('Your manual subscription payment is due soon. Complete payment to keep your workspace active.') + details('Payment details', [['Plan', 'Marketing Executive'], ['Amount due', 'SGD 575.00'], ['Due date', '30 Sep 2026'], ['Status', 'Payment pending']]) + button('Open billing', 'https://cmo.embreo.global/billing', true)
+      },
+      {
+        group: 'Billing & payment', name: 'Manual payment suspended', trigger: 'Manual payment overdue', recipient: 'Client', subject: 'Portal access has been suspended', source: 'payment/service/notifier.go',
+        eyebrow: 'Account status', title: 'Portal access is suspended', lead: 'Complete payment to restore access to your workspace.',
+        body: () => p('Hi Maya,') + p('Your access for Marketing Executive has been suspended because the manual payment was not completed by the due date.') + details('Payment details', [['Plan', 'Marketing Executive'], ['Amount due', 'SGD 575.00'], ['Status', 'Suspended']]) + p('Please contact us or complete payment to restore access.') + button('Open billing', 'https://cmo.embreo.global/billing', true)
+      },
+      {
+        group: 'Billing & payment', name: 'Renewal payment failed / grace period', trigger: 'Stripe renewal fails', recipient: 'Client', subject: 'Payment failed, portal access is still active for now', source: 'payment/service/notifier.go',
+        eyebrow: 'Payment attention', title: 'Renewal payment needs attention', lead: 'Your access is still active while you resolve the payment issue.',
+        body: () => p('Hi Maya,') + p('We couldn&rsquo;t renew Marketing Executive. Your access is still active during the grace period.') + details('Payment details', [['Plan', 'Marketing Executive'], ['Status', 'Past due'], ['Grace period', '7 days'], ['Renewal amount', 'SGD 575.00']]) + p('Please update your payment method or complete payment before the grace period ends to avoid suspension.') + button('Update payment details', 'https://cmo.embreo.global/billing', true)
+      },
+      {
+        group: 'Billing & payment', name: 'Renewal suspended', trigger: 'Renewal grace period ends', recipient: 'Client', subject: 'Portal access has been suspended', source: 'payment/service/notifier.go',
+        eyebrow: 'Account status', title: 'Portal access is suspended', lead: 'Complete payment to restore access to your workspace.',
+        body: () => p('Hi Maya,') + p('Your access for Marketing Executive has been suspended because the latest renewal payment was not completed in time.') + details('Payment details', [['Plan', 'Marketing Executive'], ['Status', 'Suspended'], ['Renewal amount', 'SGD 575.00']]) + p('Please contact us or update payment to restore access.') + button('Open billing', 'https://cmo.embreo.global/billing', true)
+      },
+      {
+        group: 'Reporting & alerts', name: 'Weekly report', trigger: 'Weekly report generated', recipient: 'Client', subject: 'Your weekly campaign report &middot; Northstar Foods &middot; Week ending 24 Sep 2026', source: 'reporting/service/notifier.go',
+        eyebrow: 'Weekly intelligence', title: 'Your weekly report is ready', lead: 'A concise view of performance, decisions, and the next seven days.',
+        body: () => p('Prepared for Northstar Foods') + p('Lead volume held above target while cost efficiency improved across the highest-intent campaigns.') + reportCard() + p('Lead quality: Qualified leads increased as the team narrowed targeting around operations leaders.') + p('Decisions made this week:') + list(['Shift 20% of spend toward the highest-converting audience', 'Keep the current landing page headline for another test cycle']) + p('Next 7 days: Launch the new retargeting sequence and validate lead-to-opportunity rate.') + p('Recommended actions:') + list(['Review the qualified-lead cohort', 'Approve the refreshed creative set']) + p('Client action: Approve the refreshed creative set by Friday.') + button('Open full report', 'https://cmo.embreo.global/reports/weekly/sample', true)
+      },
+      {
+        group: 'Reporting & alerts', name: 'Performance alert', trigger: 'Campaign notification raised', recipient: 'Client', subject: 'Cost per lead increased above target', source: 'notification/service/email.go',
+        eyebrow: 'Performance alert', title: 'Cost per lead needs a closer look', lead: 'A new update is ready in your workspace.',
+        body: () => p('Your campaign&rsquo;s cost per lead moved above the agreed target this week. The account team has flagged the shift for review.') + details('Alert details', [['Campaign', 'Northstar Demand Gen'], ['Current CPL', 'SGD 92'], ['Target CPL', 'SGD 75'], ['Severity', 'Needs review']]) + button('Review alert', 'https://cmo.embreo.global/campaigns', false)
+      }
+    ];
+
+    function p(text, cls = '') { return `<p${cls ? ` class="${cls}"` : ''}>${text}</p>`; }
+    function details(title, rows) { return `<table class="details"><tr><th colspan="2">${title}</th></tr>${rows.map(row => `<tr><td>${row[0]}</td><td>${row[1]}</td></tr>`).join('')}</table>`; }
+    function list(items) { return `<ul>${items.map(item => `<li>${item}</li>`).join('')}</ul>`; }
+    function button(label, url, fallback) { return `<div class="cta-wrap"><a class="cta" href="${url}">${label}</a></div>${fallback ? `<p class="fallback">If the button does not work, copy and paste this link into your browser:</p><a class="fallback-link" href="${url}">${url}</a>` : ''}`; }
+    function attachment(name, copy) { return `<div class="attachment"><p class="attachment-label">Attachment</p><p class="attachment-name">${name}</p><p class="attachment-copy">${copy}</p></div>`; }
+    function reportCard() { return `<div class="details" style="padding-bottom:4px"><table style="width:100%;border-collapse:collapse"><tr><th colspan="2">Headline KPIs</th></tr><tr><td style="width:50%;padding:12px 16px;color:#668096;font-size:11px;font-weight:700">Leads vs target</td><td style="padding:12px 16px;color:#0d1b2a;font-size:13px">48 leads &middot; 120% of target</td></tr><tr><td style="padding:12px 16px;color:#668096;font-size:11px;font-weight:700">CPL vs max CPL</td><td style="padding:12px 16px;color:#0d1b2a;font-size:13px">SGD 61 &middot; below SGD 75</td></tr><tr><td style="padding:12px 16px;color:#668096;font-size:11px;font-weight:700">Pipeline value</td><td style="padding:12px 16px;color:#0d1b2a;font-size:13px">SGD 84,000 influenced</td></tr></table></div>`; }
+    function shell(item) {
+      return `<div class="email-shell"><div class="email-head"><div class="brand"><img src="https://cmo.embreo.global/assets/long-logo-white.png" alt="Embreo"></div></div><div class="email-card"><p class="email-eyebrow">${item.eyebrow}</p><h3>${item.title}</h3><p class="lead">${item.lead}</p>${item.body()}<div class="signoff"><p>Regards,<br><strong>Embreo</strong> Pte Ltd &middot; Tech Team</p></div></div><div class="email-footer"><p>Sent securely by <strong>Embreo Pte. Ltd.</strong> <span class="teal">&middot;</span> Enterprise AI Solutions</p><p class="small">Singapore Headquarters <span class="teal">&middot;</span> <a href="mailto:tech@embreo.global">tech@embreo.global</a></p><p class="small"><a href="https://cmo.embreo.global/terms-and-conditions">Terms of Service</a> <span class="teal">&middot;</span> <a href="https://cmo.embreo.global/privacy-policy">Privacy Policy</a></p><p class="copyright">&copy; 2026 Embreo Pte. Ltd. All rights reserved.</p></div></div>`;
+    }
+    function card(item, index) {
+      return `<section class="preview-section" id="email-${index + 1}" data-search="${[item.name, item.group, item.trigger, item.recipient, item.subject, item.source].join(' ').toLowerCase()}"><div class="preview-meta"><div><span class="preview-index">${String(index + 1).padStart(2, '0')} / ${DATA.length}</span><h3 class="preview-title">${item.name}</h3><div class="meta-grid"><span class="meta-pill"><strong>Trigger</strong> &middot; ${item.trigger}</span><span class="meta-pill"><strong>Recipient</strong> &middot; ${item.recipient}</span><span class="meta-pill"><strong>Subject</strong> &middot; ${item.subject}</span></div><p class="source-line">${item.source}</p></div></div><div class="email-stage">${shell(item)}</div></section>`;
+    }
+    function buildNav() {
+      const nav = document.getElementById('nav');
+      const groups = [...new Set(DATA.map(item => item.group))];
+      nav.innerHTML = groups.map(group => `<div class="nav-group"><p class="nav-group-title">${group}</p><div class="nav-list">${DATA.map((item, index) => item.group === group ? `<button class="nav-item" data-target="email-${index + 1}"><span class="nav-num">${String(index + 1).padStart(2, '0')}</span><span>${item.name}</span></button>` : '').join('')}</div></div>`).join('');
+      nav.querySelectorAll('.nav-item').forEach(button => button.addEventListener('click', () => document.getElementById(button.dataset.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' })));
+    }
+    function render() {
+      document.getElementById('emailList').innerHTML = DATA.map(card).join('');
+      document.getElementById('countBadge').textContent = `${DATA.length} variants`;
+      buildNav();
+    }
+    document.getElementById('search').addEventListener('input', event => {
+      const query = event.target.value.trim().toLowerCase();
+      let visible = 0;
+      document.querySelectorAll('.preview-section').forEach(section => {
+        const show = !query || section.dataset.search.includes(query);
+        section.style.display = show ? '' : 'none';
+        if (show) visible += 1;
+      });
+      document.getElementById('empty').style.display = visible ? 'none' : 'block';
+    });
+    render();
+  </script>
+</body>
+</html>
