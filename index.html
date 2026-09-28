@@ -197,7 +197,7 @@
       {
         group: 'Requests & scheduling', name: 'Consultation declined / reschedule', trigger: 'Admin declines consultation', recipient: 'Client', subject: 'Your consultation request was declined', source: 'marketaudit/service/consultation_notifier.go',
         eyebrow: 'Consultation', title: 'Choose a new consultation time', lead: 'The requested time is no longer available.',
-        body: () => p('Hi Maya,') + p('Your consultation request for Thu, 24 Sep 2026 12:11 PM (Asia/Jakarta) has been declined.') + p('Please book another time that works better for you.') + p('Suggested options:') + list(['Option 1: Fri, 25 Sep 2026 12:11 PM (Asia/Jakarta)', 'Option 2: Sat, 26 Sep 2026 12:11 PM (Asia/Jakarta)']) + button('Book another time', 'https://cmo.embreo.global/intake/schedule?audit_id=audit_7FJ2NQ', true)
+        body: () => p('Hi Maya,') + p('Your consultation request for Thu, 24 Sep 2026 12:11 PM (Asia/Jakarta) has been declined.') + p('Please book another time that works better for you.') + p('Suggested options:') + list(['Option 1: Fri, 25 Sep 2026 12:11 PM (Asia/Jakarta)', 'Option 2: Sat, 26 Sep 2026 12:11 PM (Asia/Jakarta)']) + button('Book another time', 'https://cmo.embreo.global/book-session', true)
       },
       {
         group: 'Requests & scheduling', name: 'Meeting accepted / confirmed', trigger: 'Meeting request accepted', recipient: 'Client', subject: 'Your meeting request was accepted', source: 'event/service/meeting_notifier.go',
@@ -207,12 +207,12 @@
       {
         group: 'Requests & scheduling', name: 'Meeting declined / reschedule', trigger: 'Meeting request declined', recipient: 'Client', subject: 'Your meeting request was declined', source: 'event/service/meeting_notifier.go',
         eyebrow: 'Meeting update', title: 'Choose a new meeting time', lead: 'The requested time is no longer available.',
-        body: () => p('Hi Maya,') + p('Your meeting request for Thu, 24 Sep 2026 12:11 PM (Asia/Jakarta) was declined.') + p('Please choose another time that works for you.') + button('Schedule a new time', 'https://cmo.embreo.global/intake/schedule', true)
+        body: () => p('Hi Maya,') + p('Your meeting request for Thu, 24 Sep 2026 12:11 PM (Asia/Jakarta) was declined.') + p('Please choose another time that works for you.') + button('Schedule a new time', 'https://cmo.embreo.global/book-session', true)
       },
       {
         group: 'Account access', name: 'Client portal access credentials', trigger: 'Client account created', recipient: 'New client', subject: 'Your client portal access', source: 'marketaudit/service/client_account_notifier.go',
         eyebrow: 'Workspace access', title: 'Your client portal is ready', lead: 'Sign in to review your marketing workspace and next steps.',
-        body: () => p('Hi Maya,') + p('Your Embreo client portal is ready. Use the temporary credentials below to sign in, then update your password.') + details('Sign-in details', [['Email', 'maya@northstarfoods.co'], ['Temporary password', 'Northstar!2026'], ['Portal', 'cmo.embreo.global']]) + button('Open client portal', 'https://cmo.embreo.global/login', true) + p('For your security, please change your temporary password after signing in.')
+        body: () => p('Hi Maya,') + p('Your Embreo client portal is ready. Use the temporary credentials below to sign in, then update your password.') + details('Sign-in details', [['Email', 'maya@northstarfoods.co'], ['Temporary password', 'Northstar!2026'], ['Portal', 'cmo.embreo.global']]) + button('Open client portal', 'https://cmo.embreo.global/client-portal', true) + p('For your security, please change your temporary password after signing in.')
       },
       {
         group: 'Account access', name: 'Password reset', trigger: 'Password reset requested', recipient: 'Account holder', subject: 'Reset your password', source: 'auth/password_reset_notifier.go',
@@ -222,7 +222,7 @@
       {
         group: 'Billing & payment', name: 'Subscription selection link', trigger: 'Admin sends selected plan', recipient: 'Client', subject: 'Your subscription link is ready', source: 'marketaudit/service/billing_selection_notifier.go',
         eyebrow: 'Next step', title: 'Your subscription plan is ready', lead: 'Review the selected plan and continue securely when you&rsquo;re ready.',
-        body: () => p('Hi Maya,') + p('Thanks for meeting with our team. Your selected subscription plan is ready.') + details('Selected plan', [['Plan', 'Marketing Executive'], ['Monthly price', 'SGD 500'], ['Billing', 'Monthly'], ['Payment', 'Secure Stripe checkout']]) + button('Review your plan', 'https://cmo.embreo.global/checkout?token=sample', true)
+        body: () => p('Hi Maya,') + p('Thanks for meeting with our team. Your selected subscription plan is ready.') + details('Selected plan', [['Plan', 'Marketing Executive'], ['Monthly price', 'SGD 500'], ['Billing', 'Monthly'], ['Payment', 'Secure Stripe checkout']]) + button('Review your plan', 'https://cmo.embreo.global/checkout?token=sample&plan=marketing_executive&amount_cents=50000&audit_id=audit_7FJ2NQ', true)
       },
       {
         group: 'Billing & payment', name: 'Performance fee terms confirmed', trigger: 'Admin confirms fee terms', recipient: 'Client', subject: 'Your performance fee terms have been confirmed', source: 'payment/service/notifier.go',
@@ -232,7 +232,7 @@
       {
         group: 'Billing & payment', name: 'Invoice ready', trigger: 'Subscription charge issued', recipient: 'Client', subject: 'Your bill is ready', source: 'payment/service/notifier.go',
         eyebrow: 'Billing', title: 'Your invoice is ready', lead: 'Review the latest subscription charge in your account.',
-        body: () => p('Hi Maya,') + p('Your latest subscription charge is ready for review.') + details('Invoice details', [['Plan', 'Marketing Executive'], ['Invoice number', 'INV-2026-0048'], ['Amount due', 'SGD 575.00'], ['Due date', '30 Sep 2026'], ['Status', 'Payment pending']]) + button('Review invoice', 'https://cmo.embreo.global/billing/invoices/INV-2026-0048', true)
+        body: () => p('Hi Maya,') + p('Your latest subscription charge is ready for review.') + details('Invoice details', [['Plan', 'Marketing Executive'], ['Invoice number', 'INV-2026-0048'], ['Amount due', 'SGD 575.00'], ['Due date', '30 Sep 2026'], ['Status', 'Payment pending']]) + button('Review invoice', 'https://cmo.embreo.global/client-portal/settings/invoices/INV-2026-0048', true)
       },
       {
         group: 'Billing & payment', name: 'Manual payment confirmed', trigger: 'Admin records manual payment', recipient: 'Client', subject: 'Your manual payment has been confirmed', source: 'payment/service/notifier.go',
@@ -247,37 +247,37 @@
       {
         group: 'Billing & payment', name: 'Upcoming renewal reminder', trigger: 'Renewal date approaching', recipient: 'Client', subject: 'Your subscription renewal is coming up', source: 'payment/service/notifier.go',
         eyebrow: 'Billing', title: 'Your renewal is coming up', lead: 'Review your payment details before the next billing date.',
-        body: () => p('Hi Maya,') + p('Your subscription is scheduled to renew soon. Please review your payment details before the next billing date.') + details('Upcoming renewal', [['Plan', 'Marketing Executive'], ['Renewal date', '24 Oct 2026'], ['Expected amount', 'SGD 575.00'], ['Payment method', 'Visa ending in 4242']]) + button('Review payment details', 'https://cmo.embreo.global/billing', true)
+        body: () => p('Hi Maya,') + p('Your subscription is scheduled to renew soon. Please review your payment details before the next billing date.') + details('Upcoming renewal', [['Plan', 'Marketing Executive'], ['Renewal date', '24 Oct 2026'], ['Expected amount', 'SGD 575.00'], ['Payment method', 'Visa ending in 4242']]) + button('Review payment details', 'https://cmo.embreo.global/client-portal/settings?tab=billing', true)
       },
       {
         group: 'Billing & payment', name: 'Manual payment reminder', trigger: 'Manual payment due soon', recipient: 'Client', subject: 'Manual payment reminder', source: 'payment/service/notifier.go',
         eyebrow: 'Payment reminder', title: 'Payment is due soon', lead: 'Complete the renewal to keep your access active.',
-        body: () => p('Hi Maya,') + p('Your manual subscription payment is due soon. Complete payment to keep your workspace active.') + details('Payment details', [['Plan', 'Marketing Executive'], ['Amount due', 'SGD 575.00'], ['Due date', '30 Sep 2026'], ['Status', 'Payment pending']]) + button('Open billing', 'https://cmo.embreo.global/billing', true)
+        body: () => p('Hi Maya,') + p('Your manual subscription payment is due soon. Complete payment to keep your workspace active.') + details('Payment details', [['Plan', 'Marketing Executive'], ['Amount due', 'SGD 575.00'], ['Due date', '30 Sep 2026'], ['Status', 'Payment pending']]) + button('Open billing', 'https://cmo.embreo.global/client-portal/settings?tab=billing', true)
       },
       {
         group: 'Billing & payment', name: 'Manual payment suspended', trigger: 'Manual payment overdue', recipient: 'Client', subject: 'Portal access has been suspended', source: 'payment/service/notifier.go',
         eyebrow: 'Account status', title: 'Portal access is suspended', lead: 'Complete payment to restore access to your workspace.',
-        body: () => p('Hi Maya,') + p('Your access for Marketing Executive has been suspended because the manual payment was not completed by the due date.') + details('Payment details', [['Plan', 'Marketing Executive'], ['Amount due', 'SGD 575.00'], ['Status', 'Suspended']]) + p('Please contact us or complete payment to restore access.') + button('Open billing', 'https://cmo.embreo.global/billing', true)
+        body: () => p('Hi Maya,') + p('Your access for Marketing Executive has been suspended because the manual payment was not completed by the due date.') + details('Payment details', [['Plan', 'Marketing Executive'], ['Amount due', 'SGD 575.00'], ['Status', 'Suspended']]) + p('Please contact us or complete payment to restore access.') + button('Open billing', 'https://cmo.embreo.global/client-portal/settings?tab=billing', true)
       },
       {
         group: 'Billing & payment', name: 'Renewal payment failed / grace period', trigger: 'Stripe renewal fails', recipient: 'Client', subject: 'Payment failed, portal access is still active for now', source: 'payment/service/notifier.go',
         eyebrow: 'Payment attention', title: 'Renewal payment needs attention', lead: 'Your access is still active while you resolve the payment issue.',
-        body: () => p('Hi Maya,') + p('We couldn&rsquo;t renew Marketing Executive. Your access is still active during the grace period.') + details('Payment details', [['Plan', 'Marketing Executive'], ['Status', 'Past due'], ['Grace period', '7 days'], ['Renewal amount', 'SGD 575.00']]) + p('Please update your payment method or complete payment before the grace period ends to avoid suspension.') + button('Update payment details', 'https://cmo.embreo.global/billing', true)
+        body: () => p('Hi Maya,') + p('We couldn&rsquo;t renew Marketing Executive. Your access is still active during the grace period.') + details('Payment details', [['Plan', 'Marketing Executive'], ['Status', 'Past due'], ['Grace period', '7 days'], ['Renewal amount', 'SGD 575.00']]) + p('Please update your payment method or complete payment before the grace period ends to avoid suspension.') + button('Update payment details', 'https://cmo.embreo.global/client-portal/settings?tab=billing', true)
       },
       {
         group: 'Billing & payment', name: 'Renewal suspended', trigger: 'Renewal grace period ends', recipient: 'Client', subject: 'Portal access has been suspended', source: 'payment/service/notifier.go',
         eyebrow: 'Account status', title: 'Portal access is suspended', lead: 'Complete payment to restore access to your workspace.',
-        body: () => p('Hi Maya,') + p('Your access for Marketing Executive has been suspended because the latest renewal payment was not completed in time.') + details('Payment details', [['Plan', 'Marketing Executive'], ['Status', 'Suspended'], ['Renewal amount', 'SGD 575.00']]) + p('Please contact us or update payment to restore access.') + button('Open billing', 'https://cmo.embreo.global/billing', true)
+        body: () => p('Hi Maya,') + p('Your access for Marketing Executive has been suspended because the latest renewal payment was not completed in time.') + details('Payment details', [['Plan', 'Marketing Executive'], ['Status', 'Suspended'], ['Renewal amount', 'SGD 575.00']]) + p('Please contact us or update payment to restore access.') + button('Open billing', 'https://cmo.embreo.global/client-portal/settings?tab=billing', true)
       },
       {
         group: 'Reporting & alerts', name: 'Weekly report', trigger: 'Weekly report generated', recipient: 'Client', subject: 'Your weekly campaign report &middot; Northstar Foods &middot; Week ending 24 Sep 2026', source: 'reporting/service/notifier.go',
         eyebrow: 'Weekly intelligence', title: 'Your weekly report is ready', lead: 'A concise view of performance, decisions, and the next seven days.',
-        body: () => p('Prepared for Northstar Foods') + p('Lead volume held above target while cost efficiency improved across the highest-intent campaigns.') + reportCard() + p('Lead quality: Qualified leads increased as the team narrowed targeting around operations leaders.') + p('Decisions made this week:') + list(['Shift 20% of spend toward the highest-converting audience', 'Keep the current landing page headline for another test cycle']) + p('Next 7 days: Launch the new retargeting sequence and validate lead-to-opportunity rate.') + p('Recommended actions:') + list(['Review the qualified-lead cohort', 'Approve the refreshed creative set']) + p('Client action: Approve the refreshed creative set by Friday.') + button('Open full report', 'https://cmo.embreo.global/reports/weekly/sample', true)
+        body: () => p('Prepared for Northstar Foods') + p('Lead volume held above target while cost efficiency improved across the highest-intent campaigns.') + reportCard() + p('Lead quality: Qualified leads increased as the team narrowed targeting around operations leaders.') + p('Decisions made this week:') + list(['Shift 20% of spend toward the highest-converting audience', 'Keep the current landing page headline for another test cycle']) + p('Next 7 days: Launch the new retargeting sequence and validate lead-to-opportunity rate.') + p('Recommended actions:') + list(['Review the qualified-lead cohort', 'Approve the refreshed creative set']) + p('Client action: Approve the refreshed creative set by Friday.') + button('Open full report', 'https://cmo.embreo.global/client-portal/reports', true)
       },
       {
         group: 'Reporting & alerts', name: 'Performance alert', trigger: 'Campaign notification raised', recipient: 'Client', subject: 'Cost per lead increased above target', source: 'notification/service/email.go',
         eyebrow: 'Performance alert', title: 'Cost per lead needs a closer look', lead: 'A new update is ready in your workspace.',
-        body: () => p('Your campaign&rsquo;s cost per lead moved above the agreed target this week. The account team has flagged the shift for review.') + details('Alert details', [['Campaign', 'Northstar Demand Gen'], ['Current CPL', 'SGD 92'], ['Target CPL', 'SGD 75'], ['Severity', 'Needs review']]) + button('Review alert', 'https://cmo.embreo.global/campaigns', false)
+        body: () => p('Your campaign&rsquo;s cost per lead moved above the agreed target this week. The account team has flagged the shift for review.') + details('Alert details', [['Campaign', 'Northstar Demand Gen'], ['Current CPL', 'SGD 92'], ['Target CPL', 'SGD 75'], ['Severity', 'Needs review']]) + button('Review alert', 'https://cmo.embreo.global/client-portal/reports', true)
       }
     ];
 
