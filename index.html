@@ -148,7 +148,7 @@
       <p class="rail-kicker">Email preview studio</p>
       <h1>Every message,<br>one premium system.</h1>
       <p class="rail-copy">A visual inventory of the backend&rsquo;s shared email shell, including client notices, internal operations mail, billing states, and reporting.</p>
-      <div class="rail-count" id="countBadge">22 variants</div>
+      <div class="rail-count" id="countBadge">26 variants</div>
       <input class="search" id="search" type="search" placeholder="Filter by email, trigger, or subject&hellip;" aria-label="Filter email previews">
       <nav id="nav"></nav>
     </aside>
@@ -223,6 +223,26 @@
         group: 'Billing & payment', name: 'Subscription selection link', trigger: 'Admin sends selected plan', recipient: 'Client', subject: 'Your subscription link is ready', source: 'marketaudit/service/billing_selection_notifier.go',
         eyebrow: 'Next step', title: 'Your subscription plan is ready', lead: 'Review the selected plan and continue securely when you&rsquo;re ready.',
         body: () => p('Hi Maya,') + p('Thanks for meeting with our team. Your selected subscription plan is ready.') + details('Selected plan', [['Plan', 'Marketing Executive'], ['Monthly price', 'SGD 500'], ['Billing', 'Monthly'], ['Payment', 'Secure Stripe checkout']]) + button('Review your plan', 'https://cmo.embreo.global/checkout?token=sample&plan=marketing_executive&amount_cents=50000&audit_id=audit_7FJ2NQ', true)
+      },
+      {
+        group: 'Billing & payment', name: 'Plan upgrade confirmed', trigger: 'Stripe upgrade invoice paid', recipient: 'Client', subject: 'Your subscription plan has been upgraded', source: 'payment/service/notifier.go',
+        eyebrow: 'Billing', title: 'Plan upgrade confirmed', lead: 'Your subscription has been updated successfully.',
+        body: () => p('Hi,') + p('Your subscription has been upgraded from Marketing Executive to Marketing Manager.') + details('Plan change details', [['Previous plan', 'Marketing Executive'], ['New plan', 'Marketing Manager'], ['Amount charged', 'SGD 1,254.01']]) + p('Your new plan is active immediately.') + button('Open billing portal', 'https://cmo.embreo.global/client-portal/settings?tab=billing', true)
+      },
+      {
+        group: 'Billing & payment', name: 'Plan downgrade scheduled', trigger: 'Client schedules a downgrade', recipient: 'Client', subject: 'Your subscription downgrade is scheduled', source: 'payment/service/notifier.go',
+        eyebrow: 'Billing', title: 'Downgrade scheduled', lead: 'Your current plan remains active until the next renewal.',
+        body: () => p('Hi,') + p('Your subscription downgrade from Marketing Manager to Marketing Executive is scheduled for 24 Oct 2026.') + details('Plan change details', [['Current plan', 'Marketing Manager'], ['Next plan', 'Marketing Executive'], ['Effective date', '24 Oct 2026'], ['Next recurring charge', 'SGD 500.00']]) + p('Your current plan remains active until the scheduled date.') + button('Open billing portal', 'https://cmo.embreo.global/client-portal/settings?tab=billing', true)
+      },
+      {
+        group: 'Billing & payment', name: 'Plan downgrade completed', trigger: 'Scheduled downgrade becomes active', recipient: 'Client', subject: 'Your subscription plan has changed', source: 'payment/service/notifier.go',
+        eyebrow: 'Billing', title: 'Plan change completed', lead: 'Your scheduled subscription change is now active.',
+        body: () => p('Hi,') + p('Your subscription has changed from Marketing Manager to Marketing Executive.') + details('Plan details', [['Previous plan', 'Marketing Manager'], ['Current plan', 'Marketing Executive'], ['Recurring charge', 'SGD 500.00']]) + button('Open billing portal', 'https://cmo.embreo.global/client-portal/settings?tab=billing', true)
+      },
+      {
+        group: 'Billing & payment', name: 'Plan change payment failed', trigger: 'Stripe plan-change payment fails', recipient: 'Client', subject: 'Your plan change payment needs attention', source: 'payment/service/notifier.go',
+        eyebrow: 'Payment attention', title: 'Plan change payment needs attention', lead: 'Update your payment details to complete the requested plan change.',
+        body: () => p('Hi,') + p('We couldn&rsquo;t collect the payment required to change your subscription from Marketing Executive to Marketing Manager.') + details('Payment details', [['Amount due', 'SGD 1,254.01']]) + p('Please update your payment method and try again.') + button('Update payment details', 'https://cmo.embreo.global/client-portal/settings?tab=billing', true)
       },
       {
         group: 'Billing & payment', name: 'Performance fee terms confirmed', trigger: 'Admin confirms fee terms', recipient: 'Client', subject: 'Your performance fee terms have been confirmed', source: 'payment/service/notifier.go',
