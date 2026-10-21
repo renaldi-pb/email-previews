@@ -148,7 +148,7 @@
       <p class="rail-kicker">Email preview studio</p>
       <h1>Every message,<br>one premium system.</h1>
       <p class="rail-copy">A visual inventory of the backend&rsquo;s shared email shell, including client notices, internal operations mail, billing states, and reporting.</p>
-      <div class="rail-count" id="countBadge">26 variants</div>
+      <div class="rail-count" id="countBadge">31 variants</div>
       <input class="search" id="search" type="search" placeholder="Filter by email, trigger, or subject&hellip;" aria-label="Filter email previews">
       <nav id="nav"></nav>
     </aside>
@@ -298,6 +298,31 @@
         group: 'Reporting & alerts', name: 'Performance alert', trigger: 'Campaign notification raised', recipient: 'Client', subject: 'Cost per lead increased above target', source: 'notification/service/email.go',
         eyebrow: 'Performance alert', title: 'Cost per lead needs a closer look', lead: 'A new update is ready in your workspace.',
         body: () => p('Your campaign&rsquo;s cost per lead moved above the agreed target this week. The account team has flagged the shift for review.') + details('Alert details', [['Campaign', 'Northstar Demand Gen'], ['Current CPL', 'SGD 92'], ['Target CPL', 'SGD 75'], ['Severity', 'Needs review']]) + button('Review alert', 'https://cmo.embreo.global/client-portal/reports', true)
+      },
+      {
+        group: 'Reporting & alerts', name: 'New lead notification', trigger: 'A lead submits a Meta, Google, or landing page form', recipient: 'Client account users', subject: 'New lead from Data Science Career Switcher Lead Gen - Phase 1', source: 'notification/service/service.go',
+        eyebrow: 'New lead', title: 'New lead from Data Science Career Switcher Lead Gen - Phase 1', lead: 'A new lead has been submitted through your campaign.',
+        body: () => p('Lead details are below.') + details('Lead details', [['Name', 'Renaldi Prasetyo Basuki'], ['Email', 'rpbasku.dev@gmail.com'], ['Phone', '+6285236891709'], ['Interested in', 'Career Pathway Consultation'], ['Source', 'Landing page']]) + button('View lead in CRM', 'https://cmo.embreo.global/client-portal/crm', true)
+      },
+      {
+        group: 'Reporting & alerts', name: 'Low AI credits alert', trigger: 'OpenRouter credits fall below the configured threshold', recipient: 'Configured admin email addresses', subject: 'OpenRouter credits are low', source: 'notification/service/email.go',
+        eyebrow: 'AI credits', title: 'OpenRouter credits are low', lead: 'A new update is ready in your Embreo workspace.',
+        body: () => p('OpenRouter has $8.40 remaining, below the $10.00 alert threshold.') + button('View AI credits', 'https://cmo.embreo.global/admin/ai-agents', true)
+      },
+      {
+        group: 'Billing & payment', name: 'Stripe payment successful', trigger: 'Stripe invoice paid', recipient: 'Client billing email', subject: 'Your Stripe payment was successful', source: 'payment/service/notifier.go',
+        eyebrow: 'Payment', title: 'Payment successful', lead: 'Your Stripe invoice has been paid successfully.',
+        body: () => p('Hi,') + p('Your payment for Marketing Executive was successful.') + details('Payment details', [['Invoice', 'INV-2026-0048'], ['Plan', 'Marketing Executive'], ['Amount charged', 'SGD 575.00'], ['Subscription renewal', '1 &times; SGD 575.00']]) + p('Your subscription remains active.') + button('Open billing portal', 'https://cmo.embreo.global/client-portal/settings?tab=billing', true)
+      },
+      {
+        group: 'Billing & payment', name: 'Plan change payment successful', trigger: 'Stripe invoice paid for a subscription update', recipient: 'Client billing email', subject: 'Your plan change payment was successful', source: 'payment/service/notifier.go',
+        eyebrow: 'Payment', title: 'Plan change payment successful', lead: 'Your Stripe invoice has been paid successfully.',
+        body: () => p('Hi,') + p('Your payment for Marketing Manager was successful.') + details('Payment details', [['Invoice', 'INV-2026-0049'], ['Plan', 'Marketing Manager'], ['Amount charged', 'SGD 754.01'], ['Plan adjustment', 'Prorated plan change']]) + p('Your subscription remains active.') + button('Open billing portal', 'https://cmo.embreo.global/client-portal/settings?tab=billing', true)
+      },
+      {
+        group: 'Billing & payment', name: 'Stripe renewal payment successful', trigger: 'Stripe invoice paid for a subscription renewal', recipient: 'Client billing email', subject: 'Your subscription renewal payment was successful', source: 'payment/service/notifier.go',
+        eyebrow: 'Payment', title: 'Renewal payment successful', lead: 'Your Stripe invoice has been paid successfully.',
+        body: () => p('Hi,') + p('Your payment for Marketing Executive was successful.') + details('Payment details', [['Invoice', 'INV-2026-0050'], ['Plan', 'Marketing Executive'], ['Amount charged', 'SGD 575.00'], ['Subscription period', '24 Sep 2026 &ndash; 24 Oct 2026']]) + p('Your subscription remains active.') + button('Open billing portal', 'https://cmo.embreo.global/client-portal/settings?tab=billing', true)
       }
     ];
 
