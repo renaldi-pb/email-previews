@@ -148,7 +148,7 @@
       <p class="rail-kicker">Email preview studio</p>
       <h1>Every message,<br>one premium system.</h1>
       <p class="rail-copy">A visual inventory of the backend&rsquo;s shared email shell, including client notices, internal operations mail, billing states, and reporting.</p>
-      <div class="rail-count" id="countBadge">31 variants</div>
+      <div class="rail-count" id="countBadge">32 variants</div>
       <input class="search" id="search" type="search" placeholder="Filter by email, trigger, or subject&hellip;" aria-label="Filter email previews">
       <nav id="nav"></nav>
     </aside>
@@ -288,6 +288,11 @@
         group: 'Billing & payment', name: 'Renewal suspended', trigger: 'Renewal grace period ends', recipient: 'Client', subject: 'Portal access has been suspended', source: 'payment/service/notifier.go',
         eyebrow: 'Account status', title: 'Portal access is suspended', lead: 'Complete payment to restore access to your workspace.',
         body: () => p('Hi Maya,') + p('Your access for Marketing Executive has been suspended because the latest renewal payment was not completed in time.') + details('Payment details', [['Plan', 'Marketing Executive'], ['Status', 'Suspended'], ['Renewal amount', 'SGD 575.00']]) + p('Please contact us or update payment to restore access.') + button('Open billing', 'https://cmo.embreo.global/client-portal/settings?tab=billing', true)
+      },
+      {
+        group: 'Campaign follow-up', name: 'Enrolment follow-up sequence', trigger: 'New lead joins an enabled campaign', recipient: 'Enquiry lead', subject: 'Your Digital Marketing career roadmap is ready', source: 'emailsequence/runner.go',
+        eyebrow: 'Enrolment follow-up · Day 0', title: 'Your Digital Marketing career roadmap is ready', lead: 'Here is the information you requested about our digital marketing pathway and cohort schedules.',
+        body: () => p('Thank you for reaching out to explore our Digital Marketing programme. We understand that choosing the right path for your career transition is a significant decision, and we are here to provide the clarity you need.') + p('Attached, you will find the details regarding our practical, industry-aligned curriculum and the current intake schedule. Our approach focuses on bridging the gap between theoretical knowledge and real-world execution, ensuring you develop the technical skills highly relevant in today’s digital economy.') + attachment('Digital-Marketing-Programme-Guide.pdf', 'Programme curriculum and current intake schedule') + details('Sequence schedule', [['Day 0', 'Roadmap delivery + programme guide'], ['Day 3', 'Hiring network proof'], ['Day 7', 'Final consultation prompt']])
       },
       {
         group: 'Reporting & alerts', name: 'Weekly report', trigger: 'Weekly report generated', recipient: 'Client', subject: 'Your weekly campaign report &middot; Northstar Foods &middot; Week ending 24 Sep 2026', source: 'reporting/service/notifier.go',
